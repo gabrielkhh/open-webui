@@ -83,18 +83,22 @@
 			}
 
 			// Find the key of the first instance of OpenRouter in the list
-			const openRouterIndex = OPENAI_API_BASE_URLS.findIndex((url) => url.includes('openrouter.ai'));
+			const openRouterIndex = OPENAI_API_BASE_URLS.findIndex((url) =>
+				url.includes('openrouter.ai')
+			);
 			const openRouterApiKey = openRouterIndex !== -1 ? OPENAI_API_KEYS[openRouterIndex] : '';
 
-			const openRouterCreditsResponse = await getOpenRouterCredits(openRouterApiKey).catch((error) => {
-				toast.error(`${error}`);
-			});
+			if (openRouterIndex !== -1) {
+				const openRouterCreditsResponse = await getOpenRouterCredits(openRouterApiKey).catch((error) => {
+						toast.error(`${error}`);
+				});
 
-			if (openRouterCreditsResponse) {
-				openRouterCredits = (
-					Number(openRouterCreditsResponse.data['total_credits'] ?? 0) -
-					Number(openRouterCreditsResponse.data['total_usage'] ?? 0)
-				).toFixed(2);
+				if (openRouterCreditsResponse) {
+					openRouterCredits = (
+						Number(openRouterCreditsResponse.data['total_credits'] ?? 0) -
+						Number(openRouterCreditsResponse.data['total_usage'] ?? 0)
+					).toFixed(2);
+				}
 			}
 		}
 	});
