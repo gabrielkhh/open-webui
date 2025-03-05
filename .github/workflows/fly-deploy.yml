@@ -1,0 +1,53 @@
+name: Deploy to Fly
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy-custom-chatbot:
+    name: Deploy Chatbot
+    runs-on: ubuntu-latest
+    # concurrency: deploy-group    # optional: ensure only one action runs at a time
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      # Make run.sh executable
+      - name: Make build script executable
+        run: chmod +x ./run.sh
+
+      # Run your custom build script
+      - name: Build Docker image with custom script
+        run: ./run.sh
+        env:
+          # Pass any environment variables your script needs
+          NODE_OPTIONS: "--max-old-space-size=4096"
+          # Add any other environment variables your script expects
+          # KEY: ${{ secrets.VALUE }}
+
+      # Verify the image was built
+      - name: Verify Docker image
+        run: docker images
+
+      # Install Fly CLI
+      - name: Install Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      # Deploy to Fly.io using your built image
+      - name: Deploy to Fly.io
+        run: flyctl deploy --local-only --app self-hosted-open-webui
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      # - uses: superfly/flyctl-actions/setup-flyctl@master
+      # - run: flyctl deploy --remote-only
+      #   env:
+      #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      

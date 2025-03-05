@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for self-hosted-open-webui on 2025-02-23T21:46:13+08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'self-hosted-open-webui'
+primary_region = 'sin'
+
+[build]
+
+[[mounts]]
+  source = 'data'
+  destination = '/app/backend/data'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
