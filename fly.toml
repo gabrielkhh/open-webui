@@ -21,6 +21,6 @@ primary_region = 'sin'
   processes = ['app']
 
 [[vm]]
-  memory = '1gb'
+  memory = '1280mb'
   cpu_kind = 'shared'
   cpus = 1
