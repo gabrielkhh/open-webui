@@ -73,7 +73,7 @@
 				...item,
 				modelName: item.model?.name,
 				tags: item.model?.info?.meta?.tags?.map((tag) => tag.name).join(' '),
-				desc: item.model?.info?.meta?.description
+				desc: item.model?.info?.meta?.description,
 			};
 			return _item;
 		}),
@@ -511,6 +511,11 @@
 										{/each}
 									</div>
 								{/if}
+							</div>
+
+							<div class="flex mt-1 flex-col text-xs text-gray-400 dark:text-gray-500">
+								<span>${(Number(item.model?.["pricing"]?.prompt) * 1_000_000).toFixed(2)}/M input tokens</span>
+								<span>${(Number(item.model?.["pricing"]?.completion) * 1_000_000).toFixed(2)}/M output tokens</span>
 							</div>
 						</div>
 
